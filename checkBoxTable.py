@@ -2,7 +2,7 @@
 # Tested on OpenSuse, Python2 and Python3
 # 
 # Display a table with checkbox on the left and custom list model
-# CheckBox on the header to check all / check none
+# CheckBox on the header to check all / check none (if list partially checked, header box set to uncheck)
 #
 # Subclass QHeaderView and QAbstractTableModel
 
@@ -55,6 +55,8 @@ class RowObject(object):
 		self.col1="column 1"
 
 class Model(QtCore.QAbstractTableModel):
+	changeChecked=QtCore.pyqtSignal(int)
+	
 	def __init__(self,parent=None):
 		super(Model,self).__init__(parent)
 		#Model= list of object
@@ -91,7 +93,12 @@ class Model(QtCore.QAbstractTableModel):
 					return QtCore.Qt.Checked
 				else:
 					return QtCore.Qt.Unchecked
-
+		#Color in grey if checked
+		elif role==QtCore.Qt.BackgroundRole:
+			if self.myList[row] in self.checkList:
+				color=QtGui.QBrush(QtCore.Qt.lightGray)
+				return color
+		
 	def setData(self,index,value,role):
 		row=index.row()
 		col=index.column()
@@ -101,8 +108,17 @@ class Model(QtCore.QAbstractTableModel):
 				self.checkList.remove(rowObject)
 			else:
 				self.checkList.append(rowObject)
-			index=self.index(row,col+1)
-			self.dataChanged.emit(index,index)  
+			#we changed the color of the whole line, not just this cell
+			lastIndex=self.index(row,col+1)
+			self.dataChanged.emit(index,lastIndex)  
+			#number of row checked
+			nbChecked=len(self.checkList)
+			self.changeChecked.emit(nbChecked)
+			if nbChecked==len(self.myList):
+				self.header.isChecked=True
+			else:
+				self.header.isChecked=False
+			self.headerDataChanged.emit(QtCore.Qt.Horizontal,0,0)
 		return True
 	
 	def flags(self,index):
