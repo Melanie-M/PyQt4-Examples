@@ -7,6 +7,8 @@ Full explanation of the C++ code:
 http://fabienpn.wordpress.com/2013/05/01/qt-thread-simple-and-stable-with-sources/
 
 # checkBoxTable
+
+![table with checkboxes screeenshot](checkBoxTable.png)
 Sublass `QAbstractTable` and `QHeaderView` for a custom table with checkboxes on the left side.
 In the header, checkbox allow to check/uncheck all rows.
 
