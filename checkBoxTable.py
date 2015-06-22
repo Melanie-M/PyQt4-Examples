@@ -17,33 +17,54 @@ from PyQt4 import QtCore,QtGui
 #Emit clicked when checked/unchecked
 class CheckBoxHeader(QtGui.QHeaderView):
 	clicked=QtCore.pyqtSignal(bool)
+	_x_offset = 3
+	_y_offset = 0 #value calculated later
+	_width = 20
+	_height = 20
 	
 	def __init__(self,orientation=QtCore.Qt.Horizontal,parent=None):
 		super(CheckBoxHeader,self).__init__(orientation,parent)
 		self.setResizeMode(QtGui.QHeaderView.Stretch)
-		self.isChecked=False
+		self.resizeSection(0,20)
+		self.isChecked=0
 		
 	def paintSection(self,painter,rect,logicalIndex):
 		painter.save()
 		super(CheckBoxHeader,self).paintSection(painter,rect,logicalIndex)
 		painter.restore()
 		if logicalIndex==0:
+			self._y_offset=int((rect.height()-self._width)/2)
 			option=QtGui.QStyleOptionButton()
-			option.rect= QtCore.QRect(3,1,20,20)  #may have to be adapt
+			option.rect= QtCore.QRect(rect.x()+self._x_offset,rect.y()+self._y_offset, self._width,self._height)
 			option.state=QtGui.QStyle.State_Enabled | QtGui.QStyle.State_Active
-			if self.isChecked:
+			if self.isChecked==2:
+				option.state|=QtGui.QStyle.State_NoChange
+			elif self.isChecked==1:
 				option.state|=QtGui.QStyle.State_On
 			else:
 				option.state|=QtGui.QStyle.State_Off
+				
 			self.style().drawControl(QtGui.QStyle.CE_CheckBox,option,painter)
 			
-	def mousePressEvent(self,event):
-		if self.isChecked:
-			self.isChecked=False
-		else:
-			self.isChecked=True
-		self.clicked.emit(self.isChecked)
+	def updateCheckState(self,state):
+		self.isChecked=state
 		self.viewport().update()
+		
+	def mousePressEvent(self,event):
+		index=self.logicalIndexAt(event.pos())
+		if 0<=index<self.count():
+			x = self.sectionPosition(index)
+			condX=x + self._x_offset < event.pos().x() < x + self._x_offset + self._width
+			condY=self._y_offset < event.pos().y() < self._y_offset + self._height
+			if condX and condY:
+				if self.isChecked:
+					self.isChecked=False
+				else:
+					self.isChecked=True
+				self.clicked.emit(self.isChecked)
+				self.viewport().update()
+				return
+		super(CheckBoxHeader, self).mousePressEvent(event)
 
 #---------------------------------------------------------------------------------------------------------
 # Table Model, with checkBoxed on the left
@@ -55,7 +76,7 @@ class RowObject(object):
 		self.col1="column 1"
 
 class Model(QtCore.QAbstractTableModel):
-	changeChecked=QtCore.pyqtSignal(int)
+	changeChecked=QtCore.pyqtSignal(int)  #emit when one or more rows are checked/unchecked
 	
 	def __init__(self,parent=None):
 		super(Model,self).__init__(parent)
@@ -114,11 +135,7 @@ class Model(QtCore.QAbstractTableModel):
 			#number of row checked
 			nbChecked=len(self.checkList)
 			self.changeChecked.emit(nbChecked)
-			if nbChecked==len(self.myList):
-				self.header.isChecked=True
-			else:
-				self.header.isChecked=False
-			self.headerDataChanged.emit(QtCore.Qt.Horizontal,0,0)
+			self.updateHeader(nbChecked)
 		return True
 	
 	def flags(self,index):
@@ -140,7 +157,17 @@ class Model(QtCore.QAbstractTableModel):
 			self.checkList=self.myList[:]
 		else:
 			self.checkList=[]
+		self.changeChecked.emit(len(self.checkList))
 		self.endResetModel()
+		
+	def updateHeader(self,nbChecked):
+		if nbChecked==0:
+			self.header.updateCheckState(0)
+		elif nbChecked==len(self.myList):
+			self.header.updateCheckState(1)
+		else:
+			self.header.updateCheckState(2)
+	
 
 if __name__=='__main__':
 	app=QtGui.QApplication(sys.argv)
