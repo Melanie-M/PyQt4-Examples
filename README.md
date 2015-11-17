@@ -28,3 +28,9 @@ Given a dictionary:
 The comboBox is populated with the keys (here, species). The list widget is
 filled with the list associated to the current key (here, animal names).
 Based on [my answer on Stackoverflow](http://stackoverflow.com/a/32005220/4720935)
+
+## dateEdit
+
+Custom `QDateEdit` which only allows a list of valid days. Displayed in US
+format MM/DD/YYYY.  
+Based on [my answer on Stackoverflow](http://stackoverflow.com/a/33753350/4720935)
