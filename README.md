@@ -1,5 +1,7 @@
 <a rel="license" href="http://creativecommons.org/licenses/by/4.0/"><img alt="Creative Commons License" style="border-width:0" src="https://i.creativecommons.org/l/by/4.0/88x31.png" /></a><br />This work is licensed under a <a rel="license" href="http://creativecommons.org/licenses/by/4.0/">Creative Commons Attribution 4.0 International License</a>.
 
+
+
 ## simple-qt-thread
 Python implementation of fabienpn/simple-qt-thread-example, with Python3.4 and PyQt
 
@@ -15,7 +17,7 @@ http://fabienpn.wordpress.com/2013/05/01/qt-thread-simple-and-stable-with-source
 Sublass `QAbstractTable` and `QHeaderView` for a custom table with checkboxes on the left side.
 In the header, checkbox allow to check/uncheck all rows.
 
-Tested on OpenSuse with Python2.7 and Python3.4 (Anaconda)
+Tested on OpenSuse with Python2.7 and Python3.4
 
 ## comboBox_listWidget
 
@@ -27,16 +29,18 @@ Given a dictionary:
 
 The comboBox is populated with the keys (here, species). The list widget is
 filled with the list associated to the current key (here, animal names).
-Based on [my answer on Stackoverflow](http://stackoverflow.com/a/32005220/4720935)
+Based on [Stackoverflow answer](http://stackoverflow.com/a/32005220/4720935)
 
 ## dateEdit
 
 Custom `QDateEdit` which only allows a list of valid days. Displayed in US
 format MM/DD/YYYY.  
-Based on [my answer on Stackoverflow](http://stackoverflow.com/a/33753350/4720935)
+Based on [Stackoverflow answer](http://stackoverflow.com/a/33753350/4720935)
 
 ## tableWidget_buttonColumn
 
+![table widget with buttons](tableButton.jpg)
+
 Custom `QTableWidget` with a column of buttons + a method to know which button
 was clicked.  
-From my [stackoverflow answer](http://stackoverflow.com/a/34159455/4720935)
+From [stackoverflow answer](http://stackoverflow.com/a/34159455/4720935)
