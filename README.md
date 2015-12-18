@@ -34,3 +34,9 @@ Based on [my answer on Stackoverflow](http://stackoverflow.com/a/32005220/472093
 Custom `QDateEdit` which only allows a list of valid days. Displayed in US
 format MM/DD/YYYY.  
 Based on [my answer on Stackoverflow](http://stackoverflow.com/a/33753350/4720935)
+
+## tableWidget_buttonColumn
+
+Custom `QTableWidget` with a column of buttons + a method to know which button
+was clicked.  
+From my [stackoverflow answer](http://stackoverflow.com/a/34159455/4720935)
