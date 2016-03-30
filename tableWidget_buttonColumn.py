@@ -8,9 +8,9 @@ from PyQt4 import QtGui,QtCore
 
 class myTable(QtGui.QTableWidget):
 	
-	def __init__(self,parent=None):
-		super(myTable,self).__init__(parent)
-		self.setColumnCount(2)
+        def __init__(self,parent=None):
+                super(myTable,self).__init__(parent)
+	        self.setColumnCount(2)
 		
 	def add_item(self,name):
 		#new row
